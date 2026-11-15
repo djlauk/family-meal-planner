@@ -8,6 +8,7 @@ export const strings = {
 		template: 'Vorlage',
 		run: 'Vorschläge erstellen',
 		reset: 'Zurücksetzen',
+		print: 'Drucken',
 		unfilled: (count: number) =>
 			count === 1 ? '1 Mahlzeit ohne Vorschlag' : `${count} Mahlzeiten ohne Vorschlag`,
 		allFilled: 'Alle freien Mahlzeiten haben einen Vorschlag.'
@@ -25,6 +26,9 @@ export const strings = {
 		choose: 'Gericht wählen …',
 		chooseFor: (place: string) => `Gericht wählen für ${place}`,
 		excludedSuffix: '(ausgeschlossen)'
+	},
+	print: {
+		title: (templateName: string) => `Wochenplan – ${templateName}`
 	},
 	needs: {
 		heading: 'Wir brauchen',

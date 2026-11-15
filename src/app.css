@@ -48,6 +48,27 @@
 	}
 }
 
+/* Paper is always black on white, whatever the screen theme. */
+@media print {
+	:root {
+		color-scheme: light;
+		--color-background: #ffffff;
+		--color-surface: #ffffff;
+		--color-text: #000000;
+		--color-text-muted: #000000;
+		--color-border: #000000;
+	}
+
+	.screen-only {
+		display: none !important;
+	}
+}
+
+@page {
+	size: A4 portrait;
+	margin: 15mm;
+}
+
 /* Minimal reset, mobile first. */
 *,
 *::before,

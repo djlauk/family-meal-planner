@@ -4,6 +4,7 @@
 	import WeekGrid from '#lib/components/week-grid.svelte';
 	import { sortedDishNames } from '#lib/core/dishes.ts';
 	import NeedsList from '#lib/components/needs-list.svelte';
+	import PrintSheet from '#lib/components/print-sheet.svelte';
 	import { includeAllDishes, setDishIncluded } from '#lib/core/inclusion.ts';
 	import { needsList } from '#lib/core/needs-list.ts';
 	import { runPlanner } from '#lib/core/planner.ts';
@@ -79,7 +80,7 @@
 	<title>{strings.pageTitle}</title>
 </svelte:head>
 
-<main>
+<main class="screen-only">
 	<header>
 		<h1>{strings.pageTitle}</h1>
 		<div class="controls">
@@ -87,6 +88,7 @@
 			<div class="buttons">
 				<button type="button" class="primary" onclick={run}>{strings.plan.run}</button>
 				<button type="button" onclick={reset}>{strings.plan.reset}</button>
+				<button type="button" onclick={() => window.print()}>{strings.plan.print}</button>
 			</div>
 		</div>
 		<p class="status" role="status">
@@ -133,6 +135,8 @@
 		</div>
 	</div>
 </main>
+
+<PrintSheet {templateName} {schedule} {needs} />
 
 <style>
 	main {
