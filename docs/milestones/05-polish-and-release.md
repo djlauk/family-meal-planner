@@ -1,6 +1,6 @@
 # 05 Polish and release
 
-Status: in review (branch `feature/05-polish-and-release`). Open: manual checks (keyboard, phone width, README read-through).
+Status: done (branch `feature/05-polish-and-release`, awaiting merge). Release 1.0.0.
 
 ## Goal
 Make the app comfortable on a phone or tablet and ready to host on the home NAS.
@@ -24,10 +24,10 @@ Make the app comfortable on a phone or tablet and ready to host on the home NAS.
 - New features. Ideas go to "Deferred" in `docs/SPEC.md`.
 
 ## Acceptance criteria
-- [ ] Usable on a phone-sized screen without horizontal scrolling. (Layout fixed in milestone 02; manual check at 320 px.)
-- [ ] The main flows (run, clear, override, toggle dishes, print) work with the keyboard only. (Manual check.)
+- [x] Usable on a phone-sized screen without horizontal scrolling. (Checked manually, single column.)
+- [x] The main flows (run, clear, override, toggle dishes, print) work with the keyboard only. (Checked manually.)
 - [x] The build runs from a static server at the root and under a sub-path. (Checked with a plain Node server: `/` and `/essen/`, all 13 files 200; `/essen` redirects to `/essen/`.)
-- [ ] A new reader can edit the data files and deploy using only the README. (Owner's read-through.)
+- [x] A new reader can edit the data files and deploy using only the README. (Owner read-through.)
 - [x] `check`, `lint`, `test`, `build` pass.
 - [x] Real data cannot be committed by accident (`src/data-local/` is git-ignored; checked with `git status --ignored`).
 - [x] Text contrast meets WCAG AA in light and dark. (Unit test.)

@@ -77,7 +77,7 @@ Dishes the planner may suggest. Names must be unique.
 [
 	{ "name": "Rösti mit Spiegelei", "ingredients": ["Kartoffeln", "Eier", "Butter"] },
 	{ "name": "Pilzrisotto", "ingredients": ["Risottoreis", "Champignons"], "nogos": ["lea", "nico"] },
-	{ "name": "Resten" }
+	{ "name": "Reste" }
 ]
 ```
 
