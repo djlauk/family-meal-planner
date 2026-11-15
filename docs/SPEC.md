@@ -21,7 +21,8 @@ Fill the free cells of a weekly meal schedule with dishes that suit who is home.
 - **Static app, no backend, no persistence.** The app starts fresh on every load. Reason: one device, no user management, data is edited by hand in JSON.
 - **SvelteKit with `adapter-static`, Svelte 5 runes, TypeScript strict, plain CSS3 with variables.** Light and dark mode from the start via `prefers-color-scheme`.
 - **Pure logic in `src/lib/core/`.** Testable and deterministic.
-- **Data in the repo as plain JSON** (`src/data/`): `family.json`, `dishes.json`, `templates.json` (draft file names). Imported at build time.
+- **Data in the repo as plain JSON** (`src/data/`): `family.json` (array), `dishes.json` (array), `templates.json` (object keyed by template name). Imported at build time. One file per part, so errors can name the file.
+- **SvelteKit 3:** config lives in `vite.config.ts` (`sveltekit({ adapter })`). `$lib` is gone; imports use the Node subpath alias `#lib/*` from `package.json`, with explicit `.ts` extensions.
 
 ### Data model
 ```typescript
@@ -66,7 +67,13 @@ type FullDataSet = {
 - Dish names are unique.
 - Planned meal names are free text. They need not match a dish.
 - Each template defines all seven weekdays.
+- No duplicate ids within one `nogos` or `absences` list. Names and ids must not be blank.
+- Unknown keys are rejected (Zod strict objects), so a typo like `absent` fails instead of being ignored.
 - Errors name the file and the problem. The app fails loudly instead of running on bad data.
+- Message format (English, for the developer): `<file>: <path>: <problem>`, e.g. `templates.json: Schulwoche.friday[1].absences[0]: unknown family id "zoe"`. All problems of the first failing file are listed.
+- Validation runs during prerendering, so bad data fails `npm run build` and shows the error overlay in `npm run dev`.
+- Library: Zod 4. Schemas are the single source of the TypeScript types (`z.infer`).
+- Template keys are display names and are shown as-is.
 
 ### Planner
 Pure, deterministic, greedy. No randomness, no clock.
@@ -74,7 +81,7 @@ Pure, deterministic, greedy. No randomness, no clock.
 - First, remove every dish whose name appears in a `planned` meal anywhere in the schedule. This stops e.g. the pinned Thursday pizza from being suggested on Monday.
 - Fill order: weekdays in fixed order, then meals in list order. Only `auto` cells are filled.
 - A dish is acceptable for a cell if `nogos` is missing or empty, or if every person in `nogos` is in the cell's `absences`.
-- Take the first acceptable dish in the list. Remove it from the pool. The cell becomes `planned` with the dish name.
+- Take the first acceptable dish in the list. Remove it from the pool. The cell becomes `planned` with the dish name. Its `label` is kept.
 - `planned` cells are untouched.
 - If no dish is acceptable, the cell stays `auto`. The UI shows "no suggestion". No repeats, no fallback.
 
@@ -149,8 +156,7 @@ All state is in memory. A reload resets it.
 - Repeat fallback when the pool is empty.
 
 ## Open items (draft)
-- Zod as the validation library.
-- The optional `label` field.
+- The optional `label` field (validated and kept by the planner; display decided in milestone 02).
 - "Copy as text" in the needs list.
 - Fixed template cells not editable. Switching templates keeps the toggles.
 - Manual theme toggle (would reset on reload, since nothing is persisted).

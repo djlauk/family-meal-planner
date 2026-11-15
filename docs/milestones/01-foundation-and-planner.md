@@ -1,6 +1,6 @@
 # 01 Foundation and planner
 
-Status: not started
+Status: in review (branch `feature/01-foundation`). Open: browser-storage decision, manual light/dark check.
 
 ## Goal
 A tested project skeleton with validated sample data and a working planner, shuffle and schedule helpers. No real UI yet. Everything later builds on this.
@@ -64,14 +64,14 @@ A tested project skeleton with validated sample data and a working planner, shuf
 - Deployment.
 
 ## Acceptance criteria
-- [ ] `npm run check`, `lint`, `test` and `build` pass.
-- [ ] The static build opens from a plain static file server and shows the data view.
-- [ ] Switching the OS between light and dark changes the theme with no code change.
-- [ ] The page language is `de-CH`. All visible strings come from `de-CH.ts`.
-- [ ] Breaking a sample JSON file (e.g. unknown person id) fails loading with a message that names the file.
-- [ ] The planner tests above all pass.
-- [ ] No network requests at runtime. No browser storage used.
-- [ ] `README.md` explains install, run, test and build.
+- [x] `npm run check`, `lint`, `test` and `build` pass.
+- [x] The static build opens from a plain static file server and shows the data view.
+- [ ] Switching the OS between light and dark changes the theme with no code change. (Implemented via `prefers-color-scheme`; needs a manual browser check.)
+- [x] The page language is `de-CH`. All visible strings come from `de-CH.ts`. (Data values such as dish and template names come from the JSON.)
+- [x] Breaking a sample JSON file (e.g. unknown person id) fails loading with a message that names the file.
+- [x] The planner tests above all pass.
+- [ ] No network requests at runtime. No browser storage used. (No network requests. The app writes no storage, but SvelteKit's client router uses `sessionStorage` for scroll positions. Decision pending.)
+- [x] `README.md` explains install, run, test and build.
 
 ## Assumptions
 - Zod is the validation library. Confirm in the plan or propose an alternative with reasons.
