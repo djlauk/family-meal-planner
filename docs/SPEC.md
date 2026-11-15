@@ -19,6 +19,7 @@ Fill the free cells of a weekly meal schedule with dishes that suit who is home.
 
 ### Architecture
 - **Static app, no backend, no persistence.** The app starts fresh on every load. Reason: one device, no user management, data is edited by hand in JSON.
+  - Exception (accepted): SvelteKit's client router writes scroll positions to `sessionStorage`. This is framework-internal; the app itself reads and writes no browser storage and keeps no app state there.
 - **SvelteKit with `adapter-static`, Svelte 5 runes, TypeScript strict, plain CSS3 with variables.** Light and dark mode from the start via `prefers-color-scheme`.
 - **Pure logic in `src/lib/core/`.** Testable and deterministic.
 - **Data in the repo as plain JSON** (`src/data/`): `family.json` (array), `dishes.json` (array), `templates.json` (object keyed by template name). Imported at build time. One file per part, so errors can name the file.

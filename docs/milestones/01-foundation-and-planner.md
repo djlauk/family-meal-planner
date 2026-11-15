@@ -1,6 +1,6 @@
 # 01 Foundation and planner
 
-Status: in review (branch `feature/01-foundation`). Open: browser-storage decision, manual light/dark check.
+Status: done (branch `feature/01-foundation`, awaiting merge).
 
 ## Goal
 A tested project skeleton with validated sample data and a working planner, shuffle and schedule helpers. No real UI yet. Everything later builds on this.
@@ -66,11 +66,11 @@ A tested project skeleton with validated sample data and a working planner, shuf
 ## Acceptance criteria
 - [x] `npm run check`, `lint`, `test` and `build` pass.
 - [x] The static build opens from a plain static file server and shows the data view.
-- [ ] Switching the OS between light and dark changes the theme with no code change. (Implemented via `prefers-color-scheme`; needs a manual browser check.)
+- [x] Switching the OS between light and dark changes the theme with no code change. (Checked manually.)
 - [x] The page language is `de-CH`. All visible strings come from `de-CH.ts`. (Data values such as dish and template names come from the JSON.)
 - [x] Breaking a sample JSON file (e.g. unknown person id) fails loading with a message that names the file.
 - [x] The planner tests above all pass.
-- [ ] No network requests at runtime. No browser storage used. (No network requests. The app writes no storage, but SvelteKit's client router uses `sessionStorage` for scroll positions. Decision pending.)
+- [x] No network requests at runtime. No browser storage used. (SvelteKit's internal scroll-position `sessionStorage` is accepted; see SPEC.)
 - [x] `README.md` explains install, run, test and build.
 
 ## Assumptions
