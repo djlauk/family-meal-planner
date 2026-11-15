@@ -130,7 +130,7 @@ describe('planMeals', () => {
 		expect(Object.keys(result)).toEqual([...weekdays]);
 	});
 
-	it('works on the sample data with shuffled dishes', () => {
+	it('works on the active data set (sample or local) with shuffled dishes', () => {
 		const dataSet = loadDataSet();
 		for (const [, template] of Object.entries(dataSet.templates)) {
 			for (const seed of [1, 2, 3]) {

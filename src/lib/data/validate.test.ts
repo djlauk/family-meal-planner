@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import sampleDishes from '../../data/dishes.json';
+import sampleFamily from '../../data/family.json';
+import sampleTemplates from '../../data/templates.json';
 import { loadDataSet } from './loader';
 import { DataValidationError, validateDataSet, type RawDataFiles } from './validate';
 
@@ -55,11 +58,20 @@ describe('validateDataSet', () => {
 		expect(Object.keys(dataSet.templates)).toEqual(['Woche']);
 	});
 
-	it('accepts the bundled sample data', () => {
-		const dataSet = loadDataSet();
+	// Reads src/data directly: the loader would prefer a developer's local data.
+	it('accepts the committed sample data', () => {
+		const dataSet = validateDataSet({
+			'family.json': sampleFamily,
+			'dishes.json': sampleDishes,
+			'templates.json': sampleTemplates
+		});
 		expect(dataSet.family.length).toBeGreaterThanOrEqual(3);
 		expect(dataSet.dishes.length).toBeGreaterThanOrEqual(12);
 		expect(Object.keys(dataSet.templates).length).toBeGreaterThanOrEqual(2);
+	});
+
+	it('loads whichever data set is active without errors', () => {
+		expect(() => loadDataSet()).not.toThrow();
 	});
 
 	it('rejects an unknown family id in nogos', () => {

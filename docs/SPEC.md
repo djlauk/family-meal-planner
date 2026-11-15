@@ -162,6 +162,7 @@ All state is in memory. A reload resets it. State: the selected template name, t
 - **Slot catalogs, attendance table, ingredient registry, amounts:** more data entry than the problem needs.
 - **Ticking items in the app:** done on paper or in other tools.
 - **Aisle grouping of the needs list:** dropped. An alphabetical list is enough.
+- **Manual theme toggle:** dropped. It would reset on every reload (nothing is persisted), and the OS setting via `prefers-color-scheme` already works.
 - **Public hosting:** would expose names and schedules.
 - **ADR folder, i18n library:** this SPEC records decisions. One language needs only a strings module.
 
@@ -177,5 +178,9 @@ All state is in memory. A reload resets it. State: the selected template name, t
 - LLM suggestions.
 - Repeat fallback when the pool is empty.
 
-## Open items (draft)
-- Manual theme toggle (would reset on reload, since nothing is persisted).
+## Open items
+None.
+
+## Release
+- 1.0.0: milestones 01–05. Hosting: static files on the home NAS, plain HTTP, home network only. Paths are relative, so the app works at the web root or in any sub-folder (URL with trailing slash).
+- Accessibility baseline: native controls only, visible focus, 44 px touch targets on touch screens, WCAG AA text contrast in both themes (checked by `src/theme.test.ts`).
