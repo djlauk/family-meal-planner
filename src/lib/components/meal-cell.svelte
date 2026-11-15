@@ -42,11 +42,12 @@
 		<div class="actions">
 			<select
 				aria-label={strings.cell.chooseFor(place)}
-				value=""
+				// Shows the current manual choice instead of resetting. Browsers fire
+				// `change` on every arrow key in a closed select; a reset would jump
+				// back to the top on each step and make keyboard choice impossible.
+				value={meal.type === 'manual' ? meal.name : ''}
 				onchange={(event) => {
 					const dishName = event.currentTarget.value;
-					// Reset so the same dish can be picked again after a clear.
-					event.currentTarget.value = '';
 					if (dishName !== '') onOverride(dishName);
 				}}
 			>

@@ -28,6 +28,9 @@
 	{#each weekdays as weekday (weekday)}
 		<li class="day">
 			<h3>{strings.weekdays[weekday]}</h3>
+			{#if schedule[weekday].length === 0}
+				<p class="muted">{strings.plan.noMeals}</p>
+			{/if}
 			<ol class="meals">
 				{#each schedule[weekday] as meal, index (index)}
 					{@const cell = { weekday, index }}
@@ -70,6 +73,11 @@
 
 	h3 {
 		margin-block-end: var(--space-2);
+	}
+
+	.muted {
+		font-size: var(--font-size-small);
+		color: var(--color-text-muted);
 	}
 
 	.meals {

@@ -8,6 +8,7 @@ export const strings = {
 		template: 'Vorlage',
 		run: 'Vorschläge erstellen',
 		reset: 'Zurücksetzen',
+		noMeals: 'Keine Mahlzeiten',
 		print: 'Drucken',
 		unfilled: (count: number) =>
 			count === 1 ? '1 Mahlzeit ohne Vorschlag' : `${count} Mahlzeiten ohne Vorschlag`,

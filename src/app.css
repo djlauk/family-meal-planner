@@ -164,3 +164,17 @@ input[type='checkbox'] {
 	inline-size: 1.1rem;
 	block-size: 1.1rem;
 }
+
+/* Touch screens: at least 44 px targets (WCAG 2.5.5). Mouse sizes stay
+   compact. Last in the file so it overrides the base sizes above. */
+@media (pointer: coarse) {
+	button,
+	select {
+		min-height: 2.75rem;
+	}
+
+	input[type='checkbox'] {
+		inline-size: 1.5rem;
+		block-size: 1.5rem;
+	}
+}

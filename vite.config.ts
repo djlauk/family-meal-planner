@@ -6,6 +6,8 @@ export default defineConfig({
 	plugins: [sveltekit({ adapter: adapter() })],
 	test: {
 		include: ['src/**/*.test.ts'],
-		environment: 'node'
+		environment: 'node',
+		// Vitest skips CSS by default; the contrast test reads app.css as text.
+		css: { include: [/app\.css/] }
 	}
 });
