@@ -1,17 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { loadDataSet } from '#lib/data/loader.ts';
-import { weekdays, type Dish, type Meal, type Schedule } from '#lib/data/types.ts';
-import { isDishAcceptable, planMeals } from './planner';
+import { weekdays, type Dish, type Plan, type PlanMeal, type Schedule } from '#lib/data/types.ts';
+import { isDishAcceptable, planMeals, runPlanner } from './planner';
 import { shuffle } from './shuffle';
-import { auto, makeSchedule, planned } from './test-helpers';
+import { auto, makePlan, makeSchedule, planned } from './test-helpers';
 
-function allMeals(schedule: Schedule): Meal[] {
+function allMeals(schedule: Plan): PlanMeal[] {
 	return weekdays.flatMap((weekday) => schedule[weekday]);
 }
 
-function plannedNamesInOrder(schedule: Schedule): string[] {
-	return allMeals(schedule).flatMap((meal) => (meal.type === 'planned' ? [meal.name] : []));
+function plannedNamesInOrder(schedule: Plan): string[] {
+	return allMeals(schedule).flatMap((meal) => (meal.type !== 'auto' ? [meal.name] : []));
 }
+
+const fill = (dishList: readonly Dish[], schedule: Plan) => planMeals(dishList, schedule).schedule;
 
 const dishes: Dish[] = [
 	{ name: 'Curry', nogos: ['lea', 'nico'] },
@@ -39,11 +41,11 @@ describe('isDishAcceptable', () => {
 describe('planMeals', () => {
 	it('gives the same output for the same input', () => {
 		const schedule = makeSchedule({ monday: [auto(), auto(['lea'])], friday: [auto()] });
-		expect(planMeals(dishes, schedule)).toEqual(planMeals(dishes, schedule));
+		expect(fill(dishes, schedule)).toEqual(fill(dishes, schedule));
 	});
 
 	it('takes the first acceptable dish in list order', () => {
-		const result = planMeals(dishes, makeSchedule({ monday: [auto()] }));
+		const result = fill(dishes, makeSchedule({ monday: [auto()] }));
 		expect(result.monday).toEqual([planned('Pizza')]);
 	});
 
@@ -53,7 +55,7 @@ describe('planMeals', () => {
 			tuesday: [auto(['nico'])],
 			wednesday: [auto(['lea', 'nico'])]
 		});
-		const result = planMeals([{ name: 'Curry', nogos: ['lea', 'nico'] }], schedule);
+		const result = fill([{ name: 'Curry', nogos: ['lea', 'nico'] }], schedule);
 		expect(result.monday).toEqual([auto(['lea'])]);
 		expect(result.tuesday).toEqual([auto(['nico'])]);
 		expect(result.wednesday).toEqual([planned('Curry')]);
@@ -61,13 +63,13 @@ describe('planMeals', () => {
 
 	it('never places a dish with nogos in a cell without absences', () => {
 		const schedule = makeSchedule({ monday: [auto(), auto([])], sunday: [auto()] });
-		const result = planMeals([{ name: 'Curry', nogos: ['lea'] }], schedule);
+		const result = fill([{ name: 'Curry', nogos: ['lea'] }], schedule);
 		expect(result).toEqual(schedule);
 	});
 
 	it('never suggests a dish that is planned elsewhere in the schedule', () => {
 		const schedule = makeSchedule({ monday: [auto()], thursday: [planned('Pizza')] });
-		const result = planMeals([{ name: 'Pizza' }, { name: 'Rösti' }], schedule);
+		const result = fill([{ name: 'Pizza' }, { name: 'Rösti' }], schedule);
 		expect(result.monday).toEqual([planned('Rösti')]);
 		expect(plannedNamesInOrder(result).filter((name) => name === 'Pizza')).toHaveLength(1);
 	});
@@ -76,22 +78,19 @@ describe('planMeals', () => {
 		const schedule = makeSchedule(
 			Object.fromEntries(weekdays.map((weekday) => [weekday, [auto(['lea', 'nico']), auto()]]))
 		);
-		const names = plannedNamesInOrder(planMeals(dishes, schedule));
+		const names = plannedNamesInOrder(fill(dishes, schedule));
 		expect(new Set(names).size).toBe(names.length);
 		expect(names).toHaveLength(dishes.length);
 	});
 
 	it('leaves planned cells unchanged', () => {
 		const pinned = { type: 'planned', label: 'Znacht', name: 'Restaurant' } as const;
-		const result = planMeals(dishes, makeSchedule({ friday: [pinned, auto()] }));
+		const result = fill(dishes, makeSchedule({ friday: [pinned, auto()] }));
 		expect(result.friday[0]).toEqual(pinned);
 	});
 
 	it('keeps the label of a filled cell', () => {
-		const result = planMeals(
-			dishes,
-			makeSchedule({ monday: [{ type: 'auto', label: 'Zmittag' }] })
-		);
+		const result = fill(dishes, makeSchedule({ monday: [{ type: 'auto', label: 'Zmittag' }] }));
 		expect(result.monday).toEqual([{ type: 'planned', label: 'Zmittag', name: 'Pizza' }]);
 	});
 
@@ -99,21 +98,21 @@ describe('planMeals', () => {
 		const schedule = makeSchedule({ monday: [auto(['lea']), planned('Pizza')], tuesday: [auto()] });
 		const scheduleBefore = structuredClone(schedule);
 		const dishesBefore = structuredClone(dishes);
-		planMeals(dishes, schedule);
+		fill(dishes, schedule);
 		expect(schedule).toEqual(scheduleBefore);
 		expect(dishes).toEqual(dishesBefore);
 	});
 
 	it('leaves a cell auto when nothing fits', () => {
 		const schedule = makeSchedule({ monday: [auto()], tuesday: [auto()] });
-		const result = planMeals([{ name: 'Rösti' }], schedule);
+		const result = fill([{ name: 'Rösti' }], schedule);
 		expect(result.monday).toEqual([planned('Rösti')]);
 		expect(result.tuesday).toEqual([auto()]);
 	});
 
 	it('handles an empty dish list', () => {
 		const schedule = makeSchedule({ monday: [auto()] });
-		expect(planMeals([], schedule)).toEqual(schedule);
+		expect(fill([], schedule)).toEqual(schedule);
 	});
 
 	it('fills in fixed weekday order regardless of key order', () => {
@@ -124,10 +123,10 @@ describe('planMeals', () => {
 			[...weekdays].reverse().map((weekday) => [weekday, [auto()]])
 		) as Schedule;
 		const sevenDishes = ['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((name) => ({ name }));
-		const result = planMeals(sevenDishes, reversed);
+		const result = fill(sevenDishes, reversed);
 		expect(result.monday).toEqual([planned('A')]);
 		expect(result.sunday).toEqual([planned('G')]);
-		expect(result).toEqual(planMeals(sevenDishes, forward));
+		expect(result).toEqual(fill(sevenDishes, forward));
 		expect(Object.keys(result)).toEqual([...weekdays]);
 	});
 
@@ -135,7 +134,7 @@ describe('planMeals', () => {
 		const dataSet = loadDataSet();
 		for (const [, template] of Object.entries(dataSet.templates)) {
 			for (const seed of [1, 2, 3]) {
-				const result = planMeals(shuffle(dataSet.dishes, seed), template);
+				const result = fill(shuffle(dataSet.dishes, seed), template);
 				weekdays.forEach((weekday) =>
 					result[weekday].forEach((meal, index) => {
 						const original = template[weekday][index];
@@ -146,5 +145,47 @@ describe('planMeals', () => {
 				);
 			}
 		}
+	});
+
+	it('counts cells it could not fill', () => {
+		const schedule = makeSchedule({ monday: [auto(), auto()], tuesday: [auto(), planned('X')] });
+		expect(planMeals([{ name: 'Rösti' }], schedule).unfilledCount).toBe(2);
+		expect(planMeals(dishes, schedule).unfilledCount).toBe(0);
+	});
+
+	it('leaves manual cells untouched and does not suggest their dish again', () => {
+		const manual: PlanMeal = { type: 'manual', name: 'Pizza' };
+		const schedule = makePlan({ monday: [manual, auto()] });
+		const result = fill([{ name: 'Pizza' }, { name: 'Rösti' }], schedule);
+		expect(result.monday).toEqual([manual, planned('Rösti')]);
+	});
+
+	it('a second run fills only cells that are still auto', () => {
+		const schedule = makeSchedule({ monday: [auto(), auto(['lea'])] });
+		const first = fill([{ name: 'Rösti' }], schedule);
+		const second = fill([{ name: 'Curry', nogos: ['lea'] }, { name: 'Pizza' }], first);
+		expect(second.monday).toEqual([planned('Rösti'), planned('Curry')]);
+	});
+});
+
+describe('runPlanner', () => {
+	const schedule = makeSchedule(
+		Object.fromEntries(weekdays.map((weekday) => [weekday, [auto(), auto()]]))
+	);
+
+	it('never uses excluded dishes', () => {
+		for (const seed of [1, 2, 3, 4, 5]) {
+			const names = plannedNamesInOrder(
+				runPlanner(dishes, new Set(['Pizza', 'Lasagne']), schedule, seed).schedule
+			);
+			expect(names).not.toContain('Pizza');
+			expect(names).not.toContain('Lasagne');
+		}
+	});
+
+	it('is deterministic for a seed', () => {
+		expect(runPlanner(dishes, new Set(), schedule, 9)).toEqual(
+			runPlanner(dishes, new Set(), schedule, 9)
+		);
 	});
 });
