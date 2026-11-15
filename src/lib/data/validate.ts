@@ -10,8 +10,10 @@ export class DataValidationError extends Error {
 	readonly file: DataFileName;
 	readonly problems: readonly string[];
 
-	constructor(file: DataFileName, problems: readonly string[]) {
-		super(`${file}: ${problems.join(`\n${file}: `)}`);
+	/** `directory` is only for the message, e.g. "src/data-local". */
+	constructor(file: DataFileName, problems: readonly string[], directory?: string) {
+		const location = directory === undefined ? file : `${directory}/${file}`;
+		super(`${location}: ${problems.join(`\n${location}: `)}`);
 		this.name = 'DataValidationError';
 		this.file = file;
 		this.problems = problems;
@@ -107,7 +109,18 @@ function throwIfAny(file: DataFileName, problems: readonly string[]): void {
  * Validates the three data files. Throws a DataValidationError naming the
  * first file that has problems, with every problem found in that file.
  */
-export function validateDataSet(files: RawDataFiles): FullDataSet {
+export function validateDataSet(files: RawDataFiles, directory?: string): FullDataSet {
+	try {
+		return validateFiles(files);
+	} catch (error) {
+		if (directory !== undefined && error instanceof DataValidationError) {
+			throw new DataValidationError(error.file, error.problems, directory);
+		}
+		throw error;
+	}
+}
+
+function validateFiles(files: RawDataFiles): FullDataSet {
 	const family = parseFile('family.json', familySchema, files['family.json']);
 	throwIfAny('family.json', checkFamily(family));
 	const knownIds = new Set(family.map((member) => member.id));

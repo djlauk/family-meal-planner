@@ -23,6 +23,7 @@ Fill the free cells of a weekly meal schedule with dishes that suit who is home.
 - **SvelteKit with `adapter-static`, Svelte 5 runes, TypeScript strict, plain CSS3 with variables.** Light and dark mode from the start via `prefers-color-scheme`.
 - **Pure logic in `src/lib/core/`.** Testable and deterministic.
 - **Data in the repo as plain JSON** (`src/data/`): `family.json` (array), `dishes.json` (array), `templates.json` (object keyed by template name). Imported at build time. One file per part, so errors can name the file.
+  - Real data goes into `src/data-local/` (same three files, git-ignored). If that folder holds any data file, it must hold all three and is used instead of the sample data in `src/data/`. Errors then name the folder, e.g. `src/data-local/dishes.json: …`.
 - **SvelteKit 3:** config lives in `vite.config.ts` (`sveltekit({ adapter })`). `$lib` is gone; imports use the Node subpath alias `#lib/*` from `package.json`, with explicit `.ts` extensions.
 
 ### Data model
@@ -132,7 +133,7 @@ All state is in memory. A reload resets it. State: the selected template name, t
 
 ### Security and privacy
 - No network requests, no secrets, no analytics, system font stack.
-- First names or nicknames only. The sample data uses fictional names. Real data is added by the owner at deployment and is not committed.
+- First names or nicknames only. The sample data uses fictional names. Real data lives in the git-ignored `src/data-local/` and is never committed.
 
 ### Testing
 - Vitest unit tests for pure logic: planner, shuffle, schedule helpers, needs list, validation.
