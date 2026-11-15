@@ -56,10 +56,12 @@
 	.week {
 		display: grid;
 		gap: var(--space-3);
-		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+		/* min(): on screens narrower than 15rem, one column fills the width instead of overflowing. */
+		grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
 	}
 
 	.day {
+		min-width: 0;
 		padding: var(--space-3);
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-medium);

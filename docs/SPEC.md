@@ -108,6 +108,7 @@ All state is in memory. A reload resets it. State: the selected template name, t
 - **Override:** on any non-fixed cell, the user picks any dish from the full list (sorted, excluded dishes marked). The cell becomes `manual`. No `nogos`, `absences` or duplicate check, no warning. Overrides are deliberate choices.
 - **Dish list:** each dish has an "include in planning" toggle. Toggles only affect the next run; cells already filled stay. An "enable all" button re-includes everything.
 - Switching template resets the plan and keeps the toggles.
+- **Reset:** returns the plan to the selected template. Toggles are kept.
 - Labels are shown when present.
 
 ### Needs list

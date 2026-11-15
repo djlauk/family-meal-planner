@@ -10,6 +10,7 @@ Use the planner interactively. Pick a template, run it, discard suggestions, ove
 - Template picker. Switching resets the plan and keeps the dish toggles.
 - State in memory (Svelte 5 runes): the template name, the current plan, the set of excluded dishes. A reload resets everything.
 - **Run** button: creates a seed in the UI layer, shuffles the included dishes, calls the planner on the current plan. If cells stay empty, one message names the count.
+- **Reset** button: returns the plan to the selected template, keeps the toggles.
 - Cell states: fixed (from template, not editable), auto (free, absences visible), planned (filled by a run), manual (set by hand).
 - **Clear** on planned and manual cells: restores the template cell. Clearing a planned cell also excludes its dish.
 - **Override** on every non-fixed cell: pick any dish from the list. No warning, no checks, duplicates allowed. The cell becomes manual.
@@ -31,7 +32,8 @@ Use the planner interactively. Pick a template, run it, discard suggestions, ove
 - [x] Fixed template cells cannot be edited. (Unit test; no controls rendered.)
 - [x] A reload returns to the initial state. (No storage used; state only in component variables.)
 - [x] `check`, `lint`, `test`, `build` pass. Any new pure state logic has unit tests.
-- [ ] Manual check in the browser: the flows above, mobile width, light and dark.
+- [ ] Reset returns the plan to the template and keeps the toggles. (Manual check.)
+- [ ] Manual check in the browser: the flows above, mobile width without overlapping boxes, light and dark.
 
 ## Assumptions
 - The state logic is in `core/` as pure functions. Components only call them.

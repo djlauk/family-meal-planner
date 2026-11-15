@@ -48,6 +48,11 @@
 		unfilledCount = undefined;
 	}
 
+	// Same as re-selecting the current template: plan back to the template, toggles kept.
+	function reset() {
+		selectTemplate(templateName);
+	}
+
 	function run() {
 		const result = runPlanner(dataSet.dishes, excluded, schedule, createSeed());
 		schedule = result.schedule;
@@ -76,7 +81,10 @@
 		<h1>{strings.pageTitle}</h1>
 		<div class="controls">
 			<TemplatePicker {templateNames} selected={templateName} onSelect={selectTemplate} />
-			<button type="button" class="primary" onclick={run}>{strings.plan.run}</button>
+			<div class="buttons">
+				<button type="button" class="primary" onclick={run}>{strings.plan.run}</button>
+				<button type="button" onclick={reset}>{strings.plan.reset}</button>
+			</div>
 		</div>
 		<p class="status" role="status">
 			{#if unfilledCount !== undefined}
@@ -137,19 +145,32 @@
 		gap: var(--space-3);
 	}
 
+	.buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+	}
+
 	.status {
 		min-height: calc(var(--line-height) * 1em);
 		font-weight: 600;
 	}
 
+	/* minmax(0, …): grid tracks otherwise refuse to shrink below their
+	   widest content (the selects), which made boxes overlap on phones. */
 	.layout {
 		display: grid;
+		grid-template-columns: minmax(0, 1fr);
 		gap: var(--space-6);
+	}
+
+	.layout > section {
+		min-width: 0;
 	}
 
 	@media (min-width: 64rem) {
 		.layout {
-			grid-template-columns: 1fr 20rem;
+			grid-template-columns: minmax(0, 1fr) 20rem;
 			align-items: start;
 		}
 	}

@@ -7,6 +7,7 @@ export const strings = {
 		heading: 'Wochenplan',
 		template: 'Vorlage',
 		run: 'Vorschläge erstellen',
+		reset: 'Zurücksetzen',
 		unfilled: (count: number) =>
 			count === 1 ? '1 Mahlzeit ohne Vorschlag' : `${count} Mahlzeiten ohne Vorschlag`,
 		allFilled: 'Alle freien Mahlzeiten haben einen Vorschlag.'

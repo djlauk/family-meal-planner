@@ -68,6 +68,7 @@
 
 <style>
 	.cell {
+		min-width: 0;
 		display: grid;
 		gap: var(--space-1);
 		padding: var(--space-2);
@@ -124,8 +125,10 @@
 		gap: var(--space-2);
 	}
 
+	/* A select is as wide as its longest option; let it shrink to the cell. */
 	select {
-		flex: 1 1 10rem;
+		flex: 1 1 8rem;
+		width: 100%;
 		min-width: 0;
 	}
 </style>
