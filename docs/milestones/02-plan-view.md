@@ -1,6 +1,6 @@
 # 02 Plan view
 
-Status: in review (branch `feature/02-plan-view`). Open: manual browser check.
+Status: done (branch `feature/02-plan-view`, awaiting merge).
 
 ## Goal
 Use the planner interactively. Pick a template, run it, discard suggestions, override cells, control which dishes take part.
@@ -32,8 +32,8 @@ Use the planner interactively. Pick a template, run it, discard suggestions, ove
 - [x] Fixed template cells cannot be edited. (Unit test; no controls rendered.)
 - [x] A reload returns to the initial state. (No storage used; state only in component variables.)
 - [x] `check`, `lint`, `test`, `build` pass. Any new pure state logic has unit tests.
-- [ ] Reset returns the plan to the template and keeps the toggles. (Manual check.)
-- [ ] Manual check in the browser: the flows above, mobile width without overlapping boxes, light and dark.
+- [x] Reset returns the plan to the template and keeps the toggles. (Checked manually.)
+- [x] Manual check in the browser: the flows above, mobile width without overlapping boxes, light and dark. (Checked manually.)
 
 ## Assumptions
 - The state logic is in `core/` as pure functions. Components only call them.
