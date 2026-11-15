@@ -38,15 +38,20 @@ type Dish = {
 
 type AutoMeal = {
   type: "auto";
-  label?: string; // display only, e.g. "Mittag" (draft)
+  label?: string; // display only, e.g. "Mittag"
   absences?: string[]; // family member ids who are not at this meal
 };
 
 type PlannedMeal = {
   type: "planned";
-  label?: string; // draft
+  label?: string;
   name: string; // dish name or free text, e.g. "Restaurant"
 };
+
+// Runtime only, never in JSON: a cell the user set by hand.
+type ManualMeal = { type: "manual"; label?: string; name: string };
+type PlanMeal = Meal | ManualMeal;
+type Plan = Record<Weekday, PlanMeal[]>; // the working copy of a template
 
 type Meal = AutoMeal | PlannedMeal;
 
@@ -78,30 +83,35 @@ type FullDataSet = {
 
 ### Planner
 Pure, deterministic, greedy. No randomness, no clock.
-- Input: dishes (already filtered and shuffled by the caller), a schedule. Output: a new schedule.
-- First, remove every dish whose name appears in a `planned` meal anywhere in the schedule. This stops e.g. the pinned Thursday pizza from being suggested on Monday.
+- Input: dishes (already filtered and shuffled by the caller), a schedule. Output: a new schedule and the number of cells left unfilled.
+- First, remove every dish whose name appears in a `planned` or `manual` meal anywhere in the schedule. This stops e.g. the pinned Thursday pizza from being suggested on Monday.
 - Fill order: weekdays in fixed order, then meals in list order. Only `auto` cells are filled.
 - A dish is acceptable for a cell if `nogos` is missing or empty, or if every person in `nogos` is in the cell's `absences`.
 - Take the first acceptable dish in the list. Remove it from the pool. The cell becomes `planned` with the dish name. Its `label` is kept.
-- `planned` cells are untouched.
-- If no dish is acceptable, the cell stays `auto`. The UI shows "no suggestion". No repeats, no fallback.
+- `planned` and `manual` cells are untouched.
+- If no dish is acceptable, the cell stays `auto` and is counted. After a run the UI shows one message with that count. No repeats, no fallback.
 
 ### Shuffle
 - A seeded shuffle reorders the dishes before each run. Same seed, same order.
 - The UI layer creates the seed. The shuffle itself is pure.
 
 ### UI behavior
-All state is in memory. A reload resets it.
-- The user picks a template. The UI keeps the template unchanged and a current schedule.
-- **Run:** shuffle the dishes that are included in planning, then fill the cells that are still `auto`. Filled and overridden cells stay.
-- **Suggestion cells:** a cell that was `auto` in the template and is now `planned` can be cleared. Clearing restores the template's `AutoMeal` (with its `absences`) and sets that dish to "excluded".
-- **Override:** the user picks any dish from the list for such a cell. The cell becomes `planned`. No `nogos` or `absences` check, no warning. Overrides are deliberate choices.
-- **Fixed cells:** cells that are `planned` in the template are not editable (draft).
-- **Dish list:** each dish has an "include in planning" toggle. Excluded dishes are left out of runs. An "enable all" button re-includes everything. Overrides may pick excluded dishes.
-- Switching template resets the schedule and keeps the toggles (draft).
+All state is in memory. A reload resets it. State: the selected template name, the current plan, the set of excluded dish names.
+- The user picks a template (default: the first in `templates.json`). The template stays unchanged; the plan starts as a copy of it.
+- **Cell states:**
+  - **fixed:** `planned` in the template. Not editable at all.
+  - **auto:** free. Shows its absences. Can be overridden.
+  - **planned:** filled by a run. Can be cleared or overridden.
+  - **manual:** set by hand. Can be cleared or overridden.
+- **Run:** shuffle the included dishes with a seed from the UI, then fill the cells that are still `auto`. Planned and manual cells stay. If cells stay empty, one message names the count.
+- **Clear:** restores the template's `AutoMeal` (with its `absences`). Clearing a `planned` cell also excludes its dish. Clearing a `manual` cell does not.
+- **Override:** on any non-fixed cell, the user picks any dish from the full list (sorted, excluded dishes marked). The cell becomes `manual`. No `nogos`, `absences` or duplicate check, no warning. Overrides are deliberate choices.
+- **Dish list:** each dish has an "include in planning" toggle. Toggles only affect the next run; cells already filled stay. An "enable all" button re-includes everything.
+- Switching template resets the plan and keeps the toggles.
+- Labels are shown when present.
 
 ### Needs list
-- The ingredients of all planned meals, matched to dishes by exact name. Unmatched names (free text) add nothing.
+- The ingredients of all planned, manual and fixed meals, matched to dishes by exact name. Unmatched names (free text) add nothing.
 - Merged by normalized name: trim, collapse whitespace, lowercase (locale `de-CH`). Show the first-seen spelling.
 - A derived, read-only list. It always reflects the current schedule. No ticking, no per-item state.
 - The real shopping list is made out of band (paper, other tools). "Copy as text" is the digital way out (draft).
@@ -157,7 +167,5 @@ All state is in memory. A reload resets it.
 - Repeat fallback when the pool is empty.
 
 ## Open items (draft)
-- The optional `label` field (validated and kept by the planner; display decided in milestone 02).
 - "Copy as text" in the needs list.
-- Fixed template cells not editable. Switching templates keeps the toggles.
 - Manual theme toggle (would reset on reload, since nothing is persisted).
