@@ -125,7 +125,7 @@ All state is in memory. A reload resets it. State: the selected template name, t
 - A "Drucken" button calls `window.print()`. A4 portrait, 15 mm margins.
 - A dedicated print-only component renders the sheet; the whole screen UI is hidden in print.
 - Heading: "Wochenplan – <template name>". No date line.
-- Plan: one heading per weekday, then each meal on its own line ("Label: Gericht"). Days in two page columns (Monday–Thursday, Friday–Sunday), each one grid: day names span the row, dish names align. Unfilled `auto` cells print empty (a blank line). Absences are not printed.
+- Plan: one heading per weekday, then each meal on its own line ("Label: Gericht"). One 5-column grid (label | dish | gap | label | dish). Days paired into row blocks: Monday | Friday, Tuesday | Saturday, Wednesday | Sunday, Thursday | empty. Each block: a heading row, then as many rows as the longer day; the shorter side stays empty. Rows come from the pure `printRows` helper. Unfilled `auto` cells print empty (a blank line). Absences are not printed.
 - Ingredient list in three columns. Each item gets an empty checkbox square, drawn with CSS.
 - No page breaks inside a day or an item. If the list does not fit below the plan, it starts on a new page.
 - Black on white regardless of theme, no backgrounds.

@@ -1,36 +1,39 @@
 <script lang="ts">
-	import { weekdays, type Plan } from '#lib/data/types.ts';
+	import { printRows, type PrintHalf } from '#lib/core/print-layout.ts';
+	import type { Plan } from '#lib/data/types.ts';
 	import { strings } from '#lib/i18n/de-CH.ts';
 
 	let { templateName, schedule, needs }: { templateName: string; schedule: Plan; needs: string[] } =
 		$props();
 
-	// Fixed split for the two page columns. A grid cannot flow across CSS
-	// columns, so each page column is its own grid.
-	const pageColumns = [weekdays.slice(0, 4), weekdays.slice(4)];
+	const rows = $derived(printRows(schedule));
 </script>
+
+<!-- One half of a row: either two cells (label, dish) or one cell spanning both. -->
+{#snippet half(part: PrintHalf, side: 'left' | 'right', startsBlock: boolean)}
+	{#if part.kind === 'heading'}
+		<h2 class="span {side}" class:block-start={startsBlock}>{strings.weekdays[part.weekday]}</h2>
+	{:else if part.kind === 'meal'}
+		<span class="label {side}">{part.meal.label ? `${part.meal.label}:` : ''}</span>
+		{#if part.meal.type === 'auto'}
+			<span class="dish {side}"><span class="blank" aria-hidden="true"></span></span>
+		{:else}
+			<span class="dish {side}">{part.meal.name}</span>
+		{/if}
+	{:else}
+		<span class="span {side}" class:block-start={startsBlock}></span>
+	{/if}
+{/snippet}
 
 <!-- Shown only when printing; see the print rules in app.css. -->
 <div class="print-sheet">
 	<h1>{strings.print.title(templateName)}</h1>
 
+	<!-- Every row renders a left and a right half, so cells never shift rows. -->
 	<section class="plan">
-		{#each pageColumns as columnDays, columnIndex (columnIndex)}
-			<!-- One grid: label column sized by the browser, day names span both. -->
-			<div class="plan-column">
-				{#each columnDays as weekday (weekday)}
-					<h2 class="day-name">{strings.weekdays[weekday]}</h2>
-					{#each schedule[weekday] as meal, index (index)}
-						<!-- Always render the label cell so names stay in the second column. -->
-						<span class="label">{meal.label ? `${meal.label}:` : ''}</span>
-						{#if meal.type === 'auto'}
-							<span class="blank" aria-hidden="true"></span>
-						{:else}
-							<span>{meal.name}</span>
-						{/if}
-					{/each}
-				{/each}
-			</div>
+		{#each rows as row, rowIndex (rowIndex)}
+			{@render half(row.left, 'left', row.startsBlock)}
+			{@render half(row.right, 'right', row.startsBlock)}
 		{/each}
 	</section>
 
@@ -63,28 +66,47 @@
 		margin-block: 0 1mm;
 	}
 
+	/* label | dish | gap | label | dish. The gap is its own column so the
+	   2 mm label gap and the 10 mm middle gap stay independent. */
 	.plan {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
-		column-gap: 10mm;
-		align-items: start;
+		grid-template-columns: max-content 1fr 10mm max-content 1fr;
+		column-gap: 2mm;
+		row-gap: 0.5mm;
 		/* The plan is at most one page; keep it whole. */
 		break-inside: avoid;
 	}
 
-	.plan-column {
-		display: grid;
-		grid-template-columns: max-content 1fr;
-		column-gap: 2mm;
-		row-gap: 0.5mm;
+	.label.left {
+		grid-column: 1;
 	}
 
-	.day-name {
-		grid-column: 1 / -1;
+	.dish.left {
+		grid-column: 2;
+	}
+
+	.label.right {
+		grid-column: 4;
+	}
+
+	.dish.right {
+		grid-column: 5;
+	}
+
+	.span.left {
+		grid-column: 1 / 3;
+	}
+
+	.span.right {
+		grid-column: 4 / 6;
+	}
+
+	/* Space between day blocks, except above the first one. */
+	.block-start {
 		margin-block-start: 3mm;
 	}
 
-	.day-name:first-child {
+	.plan > .block-start:nth-child(-n + 2) {
 		margin-block-start: 0;
 	}
 
