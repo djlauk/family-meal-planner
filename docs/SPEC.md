@@ -113,9 +113,12 @@ All state is in memory. A reload resets it. State: the selected template name, t
 
 ### Needs list
 - The ingredients of all planned, manual and fixed meals, matched to dishes by exact name. Unmatched names (free text) add nothing.
-- Merged by normalized name: trim, collapse whitespace, lowercase (locale `de-CH`). Show the first-seen spelling.
+- Merged by normalized name: trim, collapse whitespace, lowercase (locale `de-CH`). Show the first-seen spelling (trimmed, whitespace collapsed). "First seen" follows weekday order, then meal order, then ingredient order.
+- Sorted alphabetically with `de-CH` collation. No grouping.
+- A dish used in several cells adds its ingredients once.
 - A derived, read-only list. It always reflects the current schedule. No ticking, no per-item state.
-- The real shopping list is made out of band (paper, other tools). "Copy as text" is the digital way out (draft).
+- The real shopping list is made out of band (paper, other tools). "Copy as text" is the digital way out: one ingredient per line.
+  - Copy order: `navigator.clipboard` (only on HTTPS or localhost), then `document.execCommand('copy')` (deprecated, but works on plain HTTP), then a read-only text box with the list pre-selected for manual copying.
 
 ### Print
 - `@media print` styles, no separate route. Prints the meal plan and the ingredient list.
@@ -151,6 +154,7 @@ All state is in memory. A reload resets it. State: the selected template name, t
 - **Star ratings:** `nogos` covers dislikes. Ratings are deferred.
 - **Slot catalogs, attendance table, ingredient registry, amounts:** more data entry than the problem needs.
 - **Ticking items in the app:** done on paper or in other tools.
+- **Aisle grouping of the needs list:** dropped. An alphabetical list is enough.
 - **Public hosting:** would expose names and schedules.
 - **ADR folder, i18n library:** this SPEC records decisions. One language needs only a strings module.
 
@@ -160,7 +164,6 @@ All state is in memory. A reload resets it. State: the selected template name, t
 - Persistence, export/import.
 - Amounts and portion scaling.
 - Fridge tracking.
-- Aisle grouping of the list.
 - PWA (needs HTTPS), multi-device sync.
 - Template editor in the UI.
 - Calendar integration.
@@ -168,5 +171,4 @@ All state is in memory. A reload resets it. State: the selected template name, t
 - Repeat fallback when the pool is empty.
 
 ## Open items (draft)
-- "Copy as text" in the needs list.
 - Manual theme toggle (would reset on reload, since nothing is persisted).
