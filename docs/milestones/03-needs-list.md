@@ -27,7 +27,7 @@ Show what the family needs for the planned meals, as one plain list.
 - [x] Free-text meals (no matching dish) add nothing and cause no error. (Unit test.)
 - [x] Dishes without `ingredients` add nothing. (Unit test.)
 - [x] Changing the plan changes the list. (Unit test; the page derives the list from the plan.)
-- [ ] "Copy as text" puts the list on the clipboard, or shows the selected text box. (Manual check, also over plain HTTP.)
+- [ ] "Copy as text" puts the list on the clipboard, or shows the selected text box. (Manual check on localhost. The plain-HTTP fallback path is untested: the test phone could not reach the dev PC. Skipped by decision; recheck on the NAS in milestone 05.)
 - [x] Unit tests cover normalization, merging, unmatched names, missing ingredients.
 - [x] `check`, `lint`, `test`, `build` pass.
 
