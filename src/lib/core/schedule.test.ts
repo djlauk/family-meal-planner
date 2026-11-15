@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Schedule } from '#lib/data/types.ts';
+import { filterIncludedDishes } from './inclusion';
 import { planMeals } from './planner';
 import { clearCell, clearSuggestion, getMeal, isSuggestionCell, overrideCell } from './schedule';
 import { auto, makeSchedule, planned } from './test-helpers';
@@ -62,7 +63,13 @@ describe('schedule helpers', () => {
 	});
 
 	it('a cleared and excluded dish is not suggested again', () => {
-		const first = planMeals([{ name: 'Rösti' }, { name: 'Curry' }], template);
+		const dishes = [{ name: 'Rösti' }, { name: 'Curry' }, { name: 'Suppe' }];
+		const first = planMeals(dishes, template);
 		expect(getMeal(first, lunch)).toMatchObject(planned('Rösti'));
+		const cleared = clearSuggestion(first, template, lunch, new Set());
+		const second = planMeals(filterIncludedDishes(dishes, cleared.excluded), cleared.schedule);
+		// Curry stays on Tuesday from the first run, so Suppe is next in line.
+		expect(getMeal(second, lunch)).toMatchObject(planned('Suppe'));
+		expect(second.tuesday).toEqual([planned('Curry')]);
 	});
 });
