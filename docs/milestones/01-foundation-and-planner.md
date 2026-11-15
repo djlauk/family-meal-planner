@@ -1,6 +1,6 @@
 # 01 Foundation and planner
 
-Status: done (branch `feature/01-foundation`, awaiting merge).
+Status: done (merged into `main`).
 
 ## Goal
 A tested project skeleton with validated sample data and a working planner, shuffle and schedule helpers. No real UI yet. Everything later builds on this.

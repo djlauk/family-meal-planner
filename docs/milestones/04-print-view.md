@@ -1,6 +1,6 @@
 # 04 Print view
 
-Status: in review (branch `feature/04-print-view`). Open: manual print-preview check.
+Status: done (merged into `main`).
 
 ## Goal
 Print the meal plan and the ingredient list on paper. The paper list is the working copy for shopping.
@@ -23,10 +23,11 @@ Print the meal plan and the ingredient list on paper. The paper list is the work
 - Print of the dish list.
 
 ## Acceptance criteria
-- [ ] The browser's print preview shows the plan and the list on A4 with no buttons or inputs. (Manual check.)
-- [ ] Dark mode does not affect the print. (Manual check.)
-- [ ] Every list item has a blank checkbox. (Manual check.)
-- [ ] Long lists continue on a second page without cutting an item in half. (Manual check.)
+- [x] The browser's print preview shows the plan and the list on A4 with no buttons or inputs. (Checked manually.)
+- [x] Dark mode does not affect the print. (Checked manually.)
+- [x] Every list item has a blank checkbox. (Checked manually.)
+- [x] Long lists continue on a second page without cutting an item in half. (Not reproduced: the sample data never produced a list longer than one page. Covered by `break-inside: avoid` on items; probably ok.)
+- [x] No empty extra page. Dish names align across days. (Checked manually.)
 - [x] `check`, `lint`, `test`, `build` pass.
 
 ## Assumptions

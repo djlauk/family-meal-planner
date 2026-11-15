@@ -1,6 +1,6 @@
 # 02 Plan view
 
-Status: done (branch `feature/02-plan-view`, awaiting merge).
+Status: done (merged into `main`).
 
 ## Goal
 Use the planner interactively. Pick a template, run it, discard suggestions, override cells, control which dishes take part.

@@ -1,6 +1,6 @@
 # 03 Needs list
 
-Status: done (branch `feature/03-needs-list`, awaiting merge). Plain-HTTP copy fallback to be rechecked on the NAS in milestone 05.
+Status: done (merged into `main`). Plain-HTTP copy fallback to be rechecked on the NAS in milestone 05.
 
 ## Goal
 Show what the family needs for the planned meals, as one plain list.
