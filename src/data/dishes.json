@@ -1,0 +1,69 @@
+[
+	{
+		"name": "Pizza",
+		"ingredients": ["Mehl", "Hefe", "Salz", "Passata", "Mozzarella", "Oregano"]
+	},
+	{
+		"name": "Älplermagronen",
+		"ingredients": ["Hörnli", "Kartoffeln", "Rahm", "Bergkäse", "Zwiebeln", "Apfelmus"],
+		"nogos": ["nico"]
+	},
+	{
+		"name": "Rösti mit Spiegelei",
+		"ingredients": ["Kartoffeln", "Eier", "Butter"]
+	},
+	{
+		"name": "Zürcher Geschnetzeltes mit Reis",
+		"ingredients": ["Kalbfleisch", "Champignons", "Rahm", "Zwiebeln", "Weisswein", "Reis"],
+		"nogos": ["lea"]
+	},
+	{
+		"name": "Spaghetti Bolognese",
+		"ingredients": ["Spaghetti", "Hackfleisch", "Passata", "Zwiebeln", "Rüebli", "Parmesan"]
+	},
+	{
+		"name": "Gemüsecurry mit Reis",
+		"ingredients": ["Reis", "Kokosmilch", "Currypaste", "Zucchetti", "Peperoni", "Kichererbsen"],
+		"nogos": ["lea", "nico"]
+	},
+	{
+		"name": "Fischstäbli mit Kartoffelstock",
+		"ingredients": ["Fischstäbli", "Kartoffeln", "Milch", "Butter"]
+	},
+	{
+		"name": "Linsensuppe",
+		"ingredients": ["Linsen", "Rüebli", "Lauch", "Zwiebeln", "Speck"],
+		"nogos": ["jonas"]
+	},
+	{
+		"name": "Gschwellti mit Käse",
+		"ingredients": ["Kartoffeln", "Appenzeller", "Butter"]
+	},
+	{
+		"name": "Spinatlasagne",
+		"ingredients": ["Lasagneblätter", "Spinat", "Ricotta", "Mozzarella", "Milch"],
+		"nogos": ["nico"]
+	},
+	{
+		"name": "Chili con Carne",
+		"ingredients": ["Hackfleisch", "Kidneybohnen", "Mais", "Passata", "Zwiebeln", "Chili"],
+		"nogos": ["lea", "nico"]
+	},
+	{
+		"name": "Pilzrisotto",
+		"ingredients": ["Risottoreis", "Champignons", "Zwiebeln", "Weisswein", "Parmesan", "Bouillon"],
+		"nogos": ["mara", "lea", "nico"]
+	},
+	{
+		"name": "Hörnli mit Ghackets",
+		"ingredients": ["Hörnli", "Hackfleisch", "Zwiebeln", "Apfelmus"],
+		"nogos": []
+	},
+	{
+		"name": "Lauchwähe",
+		"ingredients": ["Kuchenteig", "Lauch", "Eier", "Rahm", "Gruyère"]
+	},
+	{
+		"name": "Resten"
+	}
+]

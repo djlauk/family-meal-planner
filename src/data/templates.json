@@ -1,0 +1,70 @@
+{
+	"Schulwoche": {
+		"monday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Brot mit Konfi" },
+			{ "type": "auto", "label": "Zmittag", "absences": ["jonas"] },
+			{ "type": "auto", "label": "Znacht" }
+		],
+		"tuesday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Brot mit Konfi" },
+			{ "type": "auto", "label": "Zmittag", "absences": ["jonas", "lea", "nico"] },
+			{ "type": "auto", "label": "Znacht" }
+		],
+		"wednesday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Brot mit Konfi" },
+			{ "type": "auto", "label": "Zmittag", "absences": ["jonas"] },
+			{ "type": "auto", "label": "Znacht" }
+		],
+		"thursday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Müesli" },
+			{ "type": "auto", "label": "Zmittag", "absences": ["jonas", "lea", "nico"] },
+			{ "type": "planned", "label": "Znacht", "name": "Pizza" }
+		],
+		"friday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Brot mit Konfi" },
+			{ "type": "auto", "label": "Zmittag", "absences": ["jonas", "lea"] },
+			{ "type": "planned", "label": "Znacht", "name": "Restaurant" }
+		],
+		"saturday": [
+			{ "type": "planned", "label": "Brunch", "name": "Zopf und Rührei" },
+			{ "type": "auto", "label": "Znacht" }
+		],
+		"sunday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Zopf" },
+			{ "type": "auto", "label": "Zmittag" },
+			{ "type": "planned", "label": "Zvieri", "name": "Kuchen" },
+			{ "type": "planned", "label": "Znacht", "name": "Resten" }
+		]
+	},
+	"Ferien": {
+		"monday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Müesli" },
+			{ "type": "auto", "label": "Zmittag", "absences": ["mara", "jonas"] },
+			{ "type": "auto", "label": "Znacht" }
+		],
+		"tuesday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Müesli" },
+			{ "type": "auto", "label": "Zmittag", "absences": ["jonas"] },
+			{ "type": "auto", "label": "Znacht" }
+		],
+		"wednesday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Müesli" },
+			{ "type": "auto", "label": "Zmittag" },
+			{ "type": "auto", "label": "Znacht" }
+		],
+		"thursday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Müesli" },
+			{ "type": "auto", "label": "Zmittag" },
+			{ "type": "planned", "label": "Znacht", "name": "Pizza" }
+		],
+		"friday": [
+			{ "type": "planned", "label": "Zmorge", "name": "Müesli" },
+			{ "type": "auto", "label": "Zmittag" }
+		],
+		"saturday": [{ "type": "auto", "label": "Znacht" }],
+		"sunday": [
+			{ "type": "planned", "label": "Brunch", "name": "Zopf und Rührei" },
+			{ "type": "auto", "label": "Znacht" }
+		]
+	}
+}
