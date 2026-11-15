@@ -5,39 +5,31 @@
 	let { templateName, schedule, needs }: { templateName: string; schedule: Plan; needs: string[] } =
 		$props();
 
-	// One label width for the whole sheet, so dish names line up across all
-	// days and both columns. Counted in characters; +1 for the colon.
-	const labelCharacters = $derived(
-		Math.max(
-			0,
-			...weekdays.flatMap((weekday) =>
-				schedule[weekday].map((meal) => (meal.label ? meal.label.length + 1 : 0))
-			)
-		)
-	);
+	// Fixed split for the two page columns. A grid cannot flow across CSS
+	// columns, so each page column is its own grid.
+	const pageColumns = [weekdays.slice(0, 4), weekdays.slice(4)];
 </script>
 
 <!-- Shown only when printing; see the print rules in app.css. -->
 <div class="print-sheet">
 	<h1>{strings.print.title(templateName)}</h1>
 
-	<section class="plan" style:--label-characters={labelCharacters}>
-		{#each weekdays as weekday (weekday)}
-			<div class="day">
-				<h2>{strings.weekdays[weekday]}</h2>
-				<ul class="meals">
+	<section class="plan">
+		{#each pageColumns as columnDays, columnIndex (columnIndex)}
+			<!-- One grid: label column sized by the browser, day names span both. -->
+			<div class="plan-column">
+				{#each columnDays as weekday (weekday)}
+					<h2 class="day-name">{strings.weekdays[weekday]}</h2>
 					{#each schedule[weekday] as meal, index (index)}
-						<li>
-							<!-- Always render the label cell so names stay in the second column. -->
-							<span class="label">{meal.label ? `${meal.label}:` : ''}</span>
-							{#if meal.type === 'auto'}
-								<span class="blank" aria-hidden="true"></span>
-							{:else}
-								<span>{meal.name}</span>
-							{/if}
-						</li>
+						<!-- Always render the label cell so names stay in the second column. -->
+						<span class="label">{meal.label ? `${meal.label}:` : ''}</span>
+						{#if meal.type === 'auto'}
+							<span class="blank" aria-hidden="true"></span>
+						{:else}
+							<span>{meal.name}</span>
+						{/if}
 					{/each}
-				</ul>
+				{/each}
 			</div>
 		{/each}
 	</section>
@@ -72,28 +64,28 @@
 	}
 
 	.plan {
-		columns: 2;
-		column-gap: 10mm;
-	}
-
-	/* A day never splits across columns or pages. */
-	.day {
-		break-inside: avoid;
-		margin-block-end: 4mm;
-	}
-
-	/* Two columns per day: labels, then dish names aligned below each other.
-	   `display: contents` lets each li's two spans sit directly in the grid. */
-	.meals {
 		display: grid;
-		/* 1ch is the width of "0"; bold letters run wider, hence the 1.15 factor. */
-		grid-template-columns: calc(var(--label-characters) * 1.15ch) 1fr;
+		grid-template-columns: 1fr 1fr;
+		column-gap: 10mm;
+		align-items: start;
+		/* The plan is at most one page; keep it whole. */
+		break-inside: avoid;
+	}
+
+	.plan-column {
+		display: grid;
+		grid-template-columns: max-content 1fr;
 		column-gap: 2mm;
 		row-gap: 0.5mm;
 	}
 
-	.meals li {
-		display: contents;
+	.day-name {
+		grid-column: 1 / -1;
+		margin-block-start: 3mm;
+	}
+
+	.day-name:first-child {
+		margin-block-start: 0;
 	}
 
 	.label {

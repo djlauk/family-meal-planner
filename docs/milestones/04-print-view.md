@@ -9,7 +9,7 @@ Print the meal plan and the ingredient list on paper. The paper list is the work
 - `@media print` styles. No separate route. A dedicated print-only component; the screen UI is hidden in print.
 - "Drucken" button that calls `window.print()`.
 - Prints two parts: the meal plan and the ingredient list.
-  - Plan: heading "Wochenplan – <template name>", one heading per weekday, each meal on its own line. Days in two columns. No date line. No absences.
+  - Plan: heading "Wochenplan – <template name>", one heading per weekday, each meal on its own line. Days in two page columns (Mon–Thu, Fri–Sun), each one grid with day names spanning the row. Dish names align. No date line. No absences.
   - List: three columns, every ingredient with an empty CSS checkbox square.
 - Hidden in print: buttons, toggles, the dish list, template picker, override and clear controls.
 - Forced light colors regardless of the dark mode setting. Black on white, no backgrounds.
