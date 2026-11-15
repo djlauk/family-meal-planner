@@ -4,13 +4,24 @@
 
 	let { templateName, schedule, needs }: { templateName: string; schedule: Plan; needs: string[] } =
 		$props();
+
+	// One label width for the whole sheet, so dish names line up across all
+	// days and both columns. Counted in characters; +1 for the colon.
+	const labelCharacters = $derived(
+		Math.max(
+			0,
+			...weekdays.flatMap((weekday) =>
+				schedule[weekday].map((meal) => (meal.label ? meal.label.length + 1 : 0))
+			)
+		)
+	);
 </script>
 
 <!-- Shown only when printing; see the print rules in app.css. -->
 <div class="print-sheet">
 	<h1>{strings.print.title(templateName)}</h1>
 
-	<section class="plan">
+	<section class="plan" style:--label-characters={labelCharacters}>
 		{#each weekdays as weekday (weekday)}
 			<div class="day">
 				<h2>{strings.weekdays[weekday]}</h2>
@@ -75,7 +86,8 @@
 	   `display: contents` lets each li's two spans sit directly in the grid. */
 	.meals {
 		display: grid;
-		grid-template-columns: max-content 1fr;
+		/* 1ch is the width of "0"; bold letters run wider, hence the 1.15 factor. */
+		grid-template-columns: calc(var(--label-characters) * 1.15ch) 1fr;
 		column-gap: 2mm;
 		row-gap: 0.5mm;
 	}
