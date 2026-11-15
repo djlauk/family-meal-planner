@@ -3,7 +3,9 @@
 	import TemplatePicker from '#lib/components/template-picker.svelte';
 	import WeekGrid from '#lib/components/week-grid.svelte';
 	import { sortedDishNames } from '#lib/core/dishes.ts';
+	import NeedsList from '#lib/components/needs-list.svelte';
 	import { includeAllDishes, setDishIncluded } from '#lib/core/inclusion.ts';
+	import { needsList } from '#lib/core/needs-list.ts';
 	import { runPlanner } from '#lib/core/planner.ts';
 	import {
 		clearCellAndExclude,
@@ -36,6 +38,7 @@
 	let unfilledCount = $state<number | undefined>(undefined);
 
 	const template = $derived(templateFor(templateName));
+	const needs = $derived(needsList(schedule, dataSet.dishes));
 
 	// The seed is created here, in the UI layer, so core/ stays deterministic.
 	function createSeed(): number {
@@ -107,20 +110,27 @@
 			/>
 		</section>
 
-		<section class="dish-panel">
-			<h2>{strings.dishes.heading}</h2>
-			<DishToggleList
-				dishes={dataSet.dishes}
-				family={dataSet.family}
-				{excluded}
-				onToggle={(dishName, included) => {
-					excluded = setDishIncluded(excluded, dishName, included);
-				}}
-				onIncludeAll={() => {
-					excluded = includeAllDishes();
-				}}
-			/>
-		</section>
+		<div class="side">
+			<section>
+				<h2>{strings.needs.heading}</h2>
+				<NeedsList items={needs} />
+			</section>
+
+			<section>
+				<h2>{strings.dishes.heading}</h2>
+				<DishToggleList
+					dishes={dataSet.dishes}
+					family={dataSet.family}
+					{excluded}
+					onToggle={(dishName, included) => {
+						excluded = setDishIncluded(excluded, dishName, included);
+					}}
+					onIncludeAll={() => {
+						excluded = includeAllDishes();
+					}}
+				/>
+			</section>
+		</div>
 	</div>
 </main>
 
@@ -164,8 +174,14 @@
 		gap: var(--space-6);
 	}
 
-	.layout > section {
+	.layout > *,
+	.side > section {
 		min-width: 0;
+	}
+
+	.side {
+		display: grid;
+		gap: var(--space-6);
 	}
 
 	@media (min-width: 64rem) {

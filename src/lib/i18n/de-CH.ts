@@ -26,6 +26,14 @@ export const strings = {
 		chooseFor: (place: string) => `Gericht wählen für ${place}`,
 		excludedSuffix: '(ausgeschlossen)'
 	},
+	needs: {
+		heading: 'Wir brauchen',
+		empty: 'Noch keine Zutaten. Plane zuerst Gerichte.',
+		copy: 'Als Text kopieren',
+		copied: 'Kopiert',
+		copyManually:
+			'Kopieren hier nicht möglich. Text ist markiert: mit Ctrl+C kopieren (Handy: lange drücken).'
+	},
 	dishes: {
 		heading: 'Gerichte',
 		hint: 'Nur aktivierte Gerichte werden vorgeschlagen.',
