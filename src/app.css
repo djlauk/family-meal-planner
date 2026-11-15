@@ -62,6 +62,13 @@
 	.screen-only {
 		display: none !important;
 	}
+
+	/* 100vh in print is the whole sheet including margins, which pushed the
+	   body past the printable area and produced an empty second page. */
+	/* `html body` outranks the plain `body` rule further down. */
+	html body {
+		min-height: 0;
+	}
 }
 
 @page {

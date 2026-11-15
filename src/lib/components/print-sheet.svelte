@@ -14,14 +14,15 @@
 		{#each weekdays as weekday (weekday)}
 			<div class="day">
 				<h2>{strings.weekdays[weekday]}</h2>
-				<ul>
+				<ul class="meals">
 					{#each schedule[weekday] as meal, index (index)}
 						<li>
-							{#if meal.label}<span class="label">{meal.label}:</span>{/if}
+							<!-- Always render the label cell so names stay in the second column. -->
+							<span class="label">{meal.label ? `${meal.label}:` : ''}</span>
 							{#if meal.type === 'auto'}
 								<span class="blank" aria-hidden="true"></span>
 							{:else}
-								{meal.name}
+								<span>{meal.name}</span>
 							{/if}
 						</li>
 					{/each}
@@ -70,19 +71,28 @@
 		margin-block-end: 4mm;
 	}
 
-	.plan li {
-		break-inside: avoid;
+	/* Two columns per day: labels, then dish names aligned below each other.
+	   `display: contents` lets each li's two spans sit directly in the grid. */
+	.meals {
+		display: grid;
+		grid-template-columns: max-content 1fr;
+		column-gap: 2mm;
+		row-gap: 0.5mm;
+	}
+
+	.meals li {
+		display: contents;
 	}
 
 	.label {
 		font-weight: 600;
-		margin-inline-end: 1.5mm;
 	}
 
 	/* Unfilled cells print empty: a short line to write on by hand. */
 	.blank {
 		display: inline-block;
 		inline-size: 35mm;
+		block-size: 1em;
 		border-block-end: 0.3mm solid currentColor;
 		vertical-align: baseline;
 	}
