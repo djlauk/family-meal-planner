@@ -1,6 +1,7 @@
 {
 	"name": "family-meal-planner",
 	"private": true,
+	"license": "MIT",
 	"version": "1.0.0",
 	"type": "module",
 	"imports": {

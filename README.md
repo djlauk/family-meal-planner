@@ -7,6 +7,8 @@ A static web app for one family. It fills the free cells of a weekly meal schedu
 
 Design and decisions: `docs/SPEC.md`. Milestones: `docs/milestones/`.
 
+This project has been created with the help of AI.
+
 ## Using the app
 
 1. Pick a template (**Vorlage**), e.g. "Schulwoche".
@@ -147,3 +149,7 @@ Notes:
 - Pure logic in `src/lib/core/`, data loading and validation in `src/lib/data/`, UI strings in `src/lib/i18n/de-CH.ts`, components in `src/lib/components/`.
 - Imports use the `#lib/…` alias with an explicit `.ts` extension (SvelteKit 3).
 - Project rules for contributors and AI assistants: `CLAUDE.md`.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
