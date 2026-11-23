@@ -4,6 +4,9 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	plugins: [sveltekit({ adapter: adapter() })],
+	server: {
+		port: Number(process.env.PORT) || 5173
+	},
 	test: {
 		include: ['src/**/*.test.ts'],
 		environment: 'node',
